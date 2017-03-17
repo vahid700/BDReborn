@@ -158,6 +158,11 @@ end
 	else
 		lock_webpage = 'no'
 	end
+if settings.lock_tabchi then
+		lock_tabchi = settings.lock_tabchi
+	else
+		lock_tabchi = 'no'
+	end
   if msg.adduser or msg.joinuser or msg.deluser then
   if mute_tgservice == "yes" then
 del_msg(chat, tonumber(msg.id))
@@ -303,11 +308,24 @@ if tag_caption and lock_tag == "yes" then
 kick_user(user, chat)
    end
 end
-if is_filter(msg, msg.media.caption) then
+local tabchi_msg = 
+msg.text:match("Bia Pv") or
+msg.text:match("Addi") or
+msg.text:match("bia pv") or
+msg.text:match("addi") or
+msg.text:match("pv") or
+msg.text:match("Ad") or
+msg.text:match("ad") or
+msg.text:match("pv") or
+msg.text:match("Add") or
+msg.text:match("ادی بیا پی وی") or msg.text:match("اددی") or
+msg.text:match("عشقم") or msg.text:match("ادی بیا پی") or msg.text:match("اد") or
+msg.text:match("عشقم بیا پیوی کارت دارم")
+if tabchi_msg
+and lock_tabchi == "yes" then
  if is_channel then
- del_msg(chat, tonumber(msg.id))
-  elseif is_chat then
-kick_user(user, chat)
+   del_msg (chat, tonumber(msg.id))
+    kick_user(user, chat)
       end
     end
 local arabic_caption = msg.media.caption:match("[\216-\219][\128-\191]")
@@ -348,6 +366,26 @@ if tag_msg and lock_tag == "yes" then
 kick_user(user, chat)
    end
 end
+local tabchi_msg = 
+msg.text:match("Bia Pv") or
+msg.text:match("Addi") or
+msg.text:match("bia pv") or
+msg.text:match("addi") or
+msg.text:match("pv") or
+msg.text:match("Ad") or
+msg.text:match("ad") or
+msg.text:match("pv") or
+msg.text:match("Add") or
+msg.text:match("ادی بیا پی وی") or msg.text:match("اددی") or
+msg.text:match("عشقم") or msg.text:match("ادی بیا پی") or msg.text:match("اد") or
+msg.text:match("عشقم بیا پیوی کارت دارم")
+if tabchi_msg
+and lock_tabchi == "yes" then
+ if is_channel then
+   del_msg (chat, tonumber(msg.id))
+    kick_user(user, chat)
+      end
+    end
 if is_filter(msg, msg.text) then
  if is_channel then
  del_msg(chat, tonumber(msg.id))
@@ -357,6 +395,14 @@ kick_user(user, chat)
     end
 local arabic_msg = msg.text:match("[\216-\219][\128-\191]")
 if arabic_msg and lock_arabic == "yes" then
+ if is_channel then
+ del_msg(chat, tonumber(msg.id))
+  elseif is_chat then
+kick_user(user, chat)
+   end
+end
+local tabchi = msg.text:match("ادی") or msg.text:match("addi")
+if tabchi and lock_tabchi == "yes" then
  if is_channel then
  del_msg(chat, tonumber(msg.id))
   elseif is_chat then
