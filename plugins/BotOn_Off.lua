@@ -49,8 +49,6 @@ local function pre_process(msg)
   if is_channel_disabled(receiver) then
    msg.content_.text_ = ""
   end
-
- return msg
 end
 
 local function run(msg, matches)
