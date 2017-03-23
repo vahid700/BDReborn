@@ -59,7 +59,6 @@ redis:setex('sender:'..user..':flood', 30, true)
            end
       end
    end
-end
 return {
 	patterns = {},
 	pre_process = pre_process
