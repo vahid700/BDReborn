@@ -687,8 +687,36 @@ return "_Group Language Set To:_ EN"
 redis:set(hash, true)
 return "*زبان گروه تنظیم شد به : فارسی*"
 end
-end
-	-- return msg
+        local welcome = welcome:gsub("{rules}", rules)
+		local welcome = welcome:gsub("{name}", check_markdown(data.first_name_))
+		local welcome = welcome:gsub("{username}", user_name)
+		local welcome = welcome:gsub("{gpname}", arg.gp_name)
+		tdcli.sendMessage(arg.chat_id, arg.msg_id, 0, welcome, 0, "md")
+	end
+	if data[tostring(chat)] and data[tostring(chat)]['settings'] then
+	if msg.adduser then
+		welcome = data[tostring(msg.to.id)]['settings']['welcome']
+		if welcome == "yes" then
+			tdcli_function ({
+	      ID = "GetUser",
+      	user_id_ = msg.adduser
+    	}, welcome_cb, {chat_id=chat,msg_id=msg.id,gp_name=msg.to.title})
+		else
+			return false
+		end
+	end
+	if msg.joinuser then
+		welcome = data[tostring(msg.to.id)]['settings']['welcome']
+		if welcome == "yes" then
+			tdcli_function ({
+	      ID = "GetUser",
+      	user_id_ = msg.joinuser
+    	}, welcome_cb, {chat_id=chat,msg_id=msg.id,gp_name=msg.to.title})
+		else
+			return false
+        end
+		end
+	end
  end
 return {
 patterns ={
