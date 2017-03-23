@@ -838,6 +838,7 @@ end
         end
 		end
 	end
+	-- return msg
  end
 return {   
 patterns ={
@@ -849,7 +850,6 @@ patterns ={
 "^[!/#](setowner) (.*)$",
 "^[!/#](remowner)$",
 "^[!/#](remowner) (.*)$",
-"^[!/#](pin)$"
 "^[!/#](promote)$",
 "^[!/#](promote) (.*)$",
 "^[!/#](demote)$",
@@ -857,10 +857,11 @@ patterns ={
 "^[!/#](modlist)$",
 "^[!/#](ownerlist)$",
 "^[!/#](settings)$",
-"^[!/#](setwelcome)$",
 "^[!/#](setlang) (.*)$",
 "^([https?://w]*.?t.me/joinchat/%S+)$",
-"^([https?://w]*.?telegram.me/joinchat/%S+)$"
+"^([https?://w]*.?telegram.me/joinchat/%S+)$",
+"^[!/#](setwelcome) (.*)",
+"^[!/#](welcome) (.*)$"
 },
 run=run,
 pre_process = pre_process
