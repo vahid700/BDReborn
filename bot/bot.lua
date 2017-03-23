@@ -66,7 +66,6 @@ function create_config( )
 		"del",
 		"groupmanager",
 		"msg-checks",
-		"mute_time",
 		"plugins",
 		"tools"
 	},
