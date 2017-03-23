@@ -540,7 +540,7 @@ else
       end
    end
 end
-
+-------------------------------------------------
 local function run(msg, matches)
 local hash = "gp_lang:"..msg.to.id
 local lang = redis:get(hash)
@@ -548,7 +548,7 @@ local data = load_data(_config.moderation.data)
 local chat = msg.to.id
 local user = msg.from.id
 if msg.to.type ~= 'pv' then
-if matches[1] == "id" then
+if matches[1] == "id" or matches[1]=="ایدی"then
 if not matches[2] and not msg.reply_id then
 local function getpro(arg, data)
    if data.photos_[0] then
@@ -586,14 +586,61 @@ if matches[2] then
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="id"})
       end
    end
-
-if matches[1] == "add" then
+if matches[1] == "pin" and is_mod(msg) and msg.reply_id  or matches[1] == "سنجاق" and is_mod(msg) and msg.reply_id then
+local lock_pin = data[tostring(msg.to.id)]["settings"]["lock_pin"] 
+ if lock_pin == 'yes' then
+if is_owner(msg) then
+    data[tostring(chat)]['pin'] = msg.reply_id
+	  save_data(_config.moderation.data, data)
+tdcli.pinChannelMessage(msg.to.id, msg.reply_id, 1)
+if not lang then
+return "*Message Has Been Pinned*"
+elseif lang then
+return "پیام سجاق شد"
+end
+elseif not is_owner(msg) then
+   return
+ end
+ elseif lock_pin == 'no' then
+    data[tostring(chat)]['pin'] = msg.reply_id
+	  save_data(_config.moderation.data, data)
+tdcli.pinChannelMessage(msg.to.id, msg.reply_id, 1)
+if not lang then
+return "*Message Has Been Pinned*"
+elseif lang then
+return "پیام سجاق شد"
+end
+end
+end
+if matches[1] == 'unpin' and is_mod(msg) or matches[1] == 'برداشتن سنجاق' and is_mod(msg) then
+local lock_pin = data[tostring(msg.to.id)]["settings"]["lock_pin"] 
+ if lock_pin == 'yes' then
+if is_owner(msg) then
+tdcli.unpinChannelMessage(msg.to.id)
+if not lang then
+return "*Pin message has been unpinned*"
+elseif lang then
+return "پیام سنجاق شده پاک شد"
+end
+elseif not is_owner(msg) then
+   return 
+ end
+ elseif lock_pin == 'no' then
+tdcli.unpinChannelMessage(msg.to.id)
+if not lang then
+return "*Pin message has been unpinned*"
+elseif lang then
+return "پیام سنجاق شده پاک شد"
+end
+end
+end
+if matches[1] == "add" or  matches[1] == "نصب" then
 return modadd(msg)
 end
-if matches[1] == "rem" then
+if matches[1] == "rem" or matches[1] == "لغو نصب" then
 return modrem(msg)
 end
-if matches[1] == "setowner" and is_admin(msg) then
+if matches[1] == "setowner" and is_admin(msg) or  matches[1] == "تنظیم مالک" and is_admin(msg) then
 if not matches[2] and msg.reply_id then
     tdcli_function ({
       ID = "GetMessage",
@@ -614,7 +661,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="setowner"})
       end
    end
-if matches[1] == "remowner" and is_admin(msg) then
+if matches[1] == "remowner" and is_admin(msg) or matches[1] == "حذف مالک" and is_admin(msg) then
 if not matches[2] and msg.reply_id then
     tdcli_function ({
       ID = "GetMessage",
@@ -635,7 +682,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="remowner"})
       end
    end
-if matches[1] == "promote" and is_owner(msg) then
+if matches[1] == "promote" and is_owner(msg) or matches[1] == "ترفیع" and is_owner(msg) then
 if not matches[2] and msg.reply_id then
     tdcli_function ({
       ID = "GetMessage",
@@ -656,7 +703,7 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="promote"})
       end
    end
-if matches[1] == "demote" and is_owner(msg) then
+if matches[1] == "demote" and is_owner(msg) or  matches[1] == "تنزل" and is_owner(msg) then
 if not matches[2] and msg.reply_id then
  tdcli_function ({
       ID = "GetMessage",
@@ -677,17 +724,91 @@ tdcli_function ({
     }, action_by_username, {chat_id=msg.to.id,username=matches[2],cmd="demote"})
       end
    end
-if matches[1] == "setlang" and is_owner(msg) then
-   if matches[2] == "en" then
-local hash = "gp_lang:"..msg.to.id
-local lang = redis:get(hash)
- redis:del(hash)
-return "_Group Language Set To:_ EN"
-  elseif matches[2] == "fa" then
-redis:set(hash, true)
-return "*زبان گروه تنظیم شد به : فارسی*"
+
+--------------------- Welcome -----------------------
+	if matches[1] == "welcome" and is_mod(msg) then
+		if matches[2] == "enable" then
+			welcome = data[tostring(chat)]['settings']['welcome']
+			if welcome == "yes" then
+       if not lang then
+				return "_Group_ *welcome* _is already enabled_"
+       elseif lang then
+				return "_خوشآمد گویی از قبل فعال بود_"
+           end
+			else
+		data[tostring(chat)]['settings']['welcome'] = "yes"
+	    save_data(_config.moderation.data, data)
+       if not lang then
+				return "_Group_ *welcome* _has been enabled_"
+       elseif lang then
+				return "_خوشآمد گویی فعال شد_"
+          end
+			end
+		end
+		
+		if matches[2] == "disable" then
+			welcome = data[tostring(chat)]['settings']['welcome']
+			if welcome == "no" then
+      if not lang then
+				return "_Group_ *Welcome* _is already disabled_"
+      elseif lang then
+				return "_خوشآمد گویی از قبل فعال نبود_"
+         end
+			else
+		data[tostring(chat)]['settings']['welcome'] = "no"
+	    save_data(_config.moderation.data, data)
+      if not lang then
+				return "_Group_ *welcome* _has been disabled_"
+      elseif lang then
+				return "_خوشآمد گویی غیرفعال شد_"
+          end
+			end
+		end
+	end
+	if matches[1] == "setwelcome" and matches[2] and is_mod(msg) then
+		data[tostring(chat)]['setwelcome'] = matches[2]
+	    save_data(_config.moderation.data, data)
+       if not lang then
+		return "_Welcome Message Has Been Set To :_\n*"..matches[2].."*\n\n*You can use :*\n_{gpname} Group Name_\n_{rules} ➣ Show Group Rules_\n_{name} ➣ New Member First Name_\n_{username} ➣ New Member Username_"
+       else
+		return "_پیام خوشآمد گویی تنظیم شد به :_\n*"..matches[2].."*\n\n*شما میتوانید از*\n_{gpname} نام گروه_\n_{rules} ➣ نمایش قوانین گروه_\n_{name} ➣ نام کاربر جدید_\n_{username} ➣ نام کاربری کاربر جدید_\n_استفاده کنید_"
+        end
+     end
+	end
 end
-        local welcome = welcome:gsub("{rules}", rules)
+-----------------------------------------
+local function pre_process(msg)
+   local chat = msg.to.id
+   local user = msg.from.id
+ local data = load_data(_config.moderation.data)
+	local function welcome_cb(arg, data)
+local hash = "gp_lang:"..arg.chat_id
+local lang = redis:get(hash)
+		administration = load_data(_config.moderation.data)
+    if administration[arg.chat_id]['setwelcome'] then
+     welcome = administration[arg.chat_id]['setwelcome']
+      else
+     if not lang then
+     welcome = "*Welcome Dude*"
+    elseif lang then
+     welcome = "_خوش آمدید_"
+        end
+     end
+ if administration[tostring(arg.chat_id)]['rules'] then
+rules = administration[arg.chat_id]['rules']
+else
+   if not lang then
+     rules = "ℹ️ The Default Rules :\n1⃣ No Flood.\n2⃣ No Spam.\n3⃣ No Advertising.\n4⃣ Try to stay on topic.\n5⃣ Forbidden any racist, sexual, homophobic or gore content.\n➡️ Repeated failure to comply with these rules will cause ban.\n@Erfan_herkuless_051"
+    elseif lang then
+       rules = "ℹ️ قوانین پپیشفرض:\n1⃣ ارسال پیام مکرر ممنوع.\n2⃣ اسپم ممنوع.\n3⃣ تبلیغ ممنوع.\n4⃣ سعی کنید از موضوع خارج نشید.\n5⃣ هرنوع نژاد پرستی, شاخ بازی و پورنوگرافی ممنوع .\n➡️ از قوانین پیروی کنید, در صورت عدم رعایت قوانین اول اخطار و در صورت تکرار مسدود.\n@Erfan_herkuless_051"
+ end
+end
+if data.username_ then
+user_name = "@"..check_markdown(data.username_)
+else
+user_name = ""
+end
+		local welcome = welcome:gsub("{rules}", rules)
 		local welcome = welcome:gsub("{name}", check_markdown(data.first_name_))
 		local welcome = welcome:gsub("{username}", user_name)
 		local welcome = welcome:gsub("{gpname}", arg.gp_name)
@@ -718,7 +839,7 @@ end
 		end
 	end
  end
-return {
+return {   
 patterns ={
 "^[!/#](id)$",
 "^[!/#](id) (.*)$",
@@ -728,6 +849,7 @@ patterns ={
 "^[!/#](setowner) (.*)$",
 "^[!/#](remowner)$",
 "^[!/#](remowner) (.*)$",
+"^[!/#](pin)$"
 "^[!/#](promote)$",
 "^[!/#](promote) (.*)$",
 "^[!/#](demote)$",
@@ -735,6 +857,7 @@ patterns ={
 "^[!/#](modlist)$",
 "^[!/#](ownerlist)$",
 "^[!/#](settings)$",
+"^[!/#](setwelcome)$",
 "^[!/#](setlang) (.*)$",
 "^([https?://w]*.?t.me/joinchat/%S+)$",
 "^([https?://w]*.?telegram.me/joinchat/%S+)$"
