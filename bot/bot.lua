@@ -63,17 +63,13 @@ function create_config( )
   -- A simple config with basic plugins and ourselves as privileged user
 	config = {
     enabled_plugins = {
-		"banhammer",
+	    "del",
 		"groupmanager",
 		"msg-checks",
 		"plugins",
-		"tools",
-		"fun",
-		"del",
-		"BotOn_Off",
-		"info"
+		"tools"
 	},
-    sudo_users = {275055664},
+    sudo_users = {},
     admins = {},
     disabled_channels = {},
     moderation = {data = './data/moderation.json'},
