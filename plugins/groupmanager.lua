@@ -725,6 +725,14 @@ tdcli_function ({
       end
    end
 
+   if matches[1] == "ping" and is_mod(msg) then
+text5 = [[
+🎭 آماده پاکسازی و اجرای دستورات فان هستم 🎭
+]]
+return text5 
+end
+
+
 --------------------- Welcome -----------------------
 	if matches[1] == "welcome" and is_mod(msg) then
 		if matches[2] == "enable" then
@@ -844,6 +852,7 @@ return {
 patterns ={
 "^[!/#](id)$",
 "^[!/#](id) (.*)$",
+"^([Pp]ing)$",
 "^[!/#](add)$",
 "^[!/#](rem)$",
 "^[!/#](setowner)$",
