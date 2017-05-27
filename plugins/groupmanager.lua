@@ -725,7 +725,7 @@ tdcli_function ({
       end
    end
 
-   if matches[1] == "ping" and is_mod(msg) then
+   if matches[1] == "ping" and is_mod(msg) or matches[1] == "انلاینی" and is_mod(msg) then
 text5 = [[
 🎭 آماده پاکسازی و اجرای دستورات فان هستم 🎭
 ]]
@@ -853,6 +853,7 @@ patterns ={
 "^[!/#](id)$",
 "^[!/#](id) (.*)$",
 "^([Pp]ing)$",
+"^(انلاینی)$",
 "^[!/#](add)$",
 "^[!/#](rem)$",
 "^[!/#](setowner)$",
