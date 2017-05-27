@@ -63,15 +63,18 @@ function create_config( )
   -- A simple config with basic plugins and ourselves as privileged user
 	config = {
     enabled_plugins = {
+	    "autodelcache",
 	    "cleanchat",
+		"CleanDeleted",
 		"del",
+		"delall",
 		"dell",
 		"groupmanager",
 		"msg-checks",
 		"plugins",
 		"tools"
 	},
-    sudo_users = {275055664},
+    sudo_users = {244200491},
     admins = {},
     disabled_channels = {},
     moderation = {data = './data/moderation.json'},
